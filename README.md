@@ -134,7 +134,7 @@ apps/
   gallery/                # landing page with live widget embeds
 ```
 
-**Key design decisions** (locked during planning, see `DESIGN.md`):
+**Key design decisions** (see [docs/architecture.md](docs/architecture.md) for deep rationale):
 
 - Plain-JS classes with `mount(el, props)` / `destroy()` — no React dep, works everywhere
 - Per-widget JSON Schema — machine-readable by Claude, runtime-validated at mount, TS types auto-generated

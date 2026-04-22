@@ -23,7 +23,7 @@ jobs:
         run: bun test
 
       - name: Validate all widget examples against their schemas
-        run: bun test packages/ace-components/registry.test.js
+        run: bun test packages/ace-components/test/registry.test.js
 
   size:
     runs-on: ubuntu-latest

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "bun:test";
-import { registry, widgetTypes, catalog } from "./registry.js";
-import siteConfigSchema from "./schemas/site-config.schema.json" with { type: "json" };
+import { registry, widgetTypes, catalog } from "../registry.js";
+import siteConfigSchema from "../schemas/site-config.schema.json" with { type: "json" };
 
 describe("registry", () => {
   it("contains all 6 widget types", () => {
@@ -37,7 +37,7 @@ describe("registry", () => {
   });
 
   it("each widget example validates against that widget's schema", async () => {
-    const { validate } = await import("./src/lib/validate.js");
+    const { validate } = await import("../src/lib/validate.js");
     for (const [type, W] of Object.entries(registry)) {
       for (const ex of W.examples) {
         const r = validate(ex, W.schema);
