@@ -1,4 +1,4 @@
-// Widget registry — the contract between the generator and @ace/template.
+// Widget registry — the contract between the generator and ace-study-template.
 // CLAUDE.md instructs Claude to reference this registry when selecting widgets
 // and filling their `props`. Every widget type string in site.config.json
 // must be a key of this object.

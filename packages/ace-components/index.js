@@ -1,4 +1,4 @@
-// @ace/components — public API
+// ace-study-components — public API
 //
 // Every widget is a class with:
 //   static type      — string key, matches registry

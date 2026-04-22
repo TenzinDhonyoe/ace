@@ -1,7 +1,7 @@
 {
-  "name": "@ace/components",
-  "version": "0.0.1",
-  "description": "AI-composable interactive study widgets — vanilla JS, framework-agnostic",
+  "name": "ace-study-components",
+  "version": "0.1.0",
+  "description": "AI-composable interactive study widgets — sliders wired to equations, flashcards, MCQs, diagram labels, concept cards. Vanilla JS, framework-agnostic.",
   "license": "MIT",
   "type": "module",
   "main": "./index.js",
@@ -25,5 +25,12 @@
     "test": "bun test",
     "build": "echo 'ESM source — no build step needed'"
   },
-  "keywords": ["education", "interactive", "ai", "study", "components", "svg", "physics"]
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TenzinDhonyoe/ace.git",
+    "directory": "packages/ace-components"
+  },
+  "homepage": "https://github.com/TenzinDhonyoe/ace#readme",
+  "bugs": "https://github.com/TenzinDhonyoe/ace/issues",
+  "keywords": ["education", "interactive", "ai", "study", "components", "svg", "physics", "flashcards", "mcq", "widgets", "exam-prep"]
 }

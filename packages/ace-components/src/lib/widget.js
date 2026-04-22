@@ -1,4 +1,4 @@
-// Base class for all @ace/components widgets.
+// Base class for all ace-study-components widgets.
 //
 // Subclasses must define:
 //   static type         — string, matches registry key (e.g. "slider-sandbox")

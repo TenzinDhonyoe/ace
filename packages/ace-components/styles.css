@@ -1,4 +1,4 @@
-/* @ace/components — shared styles.
+/* ace-study-components — shared styles.
    Ported from the hand-tuned BME804 reference (bme804-review.vercel.app).
    Palette + typography are warm/editorial, not SaaS-blue.
    All rules are scoped under .ace-root so including this CSS doesn't leak
@@ -28,6 +28,21 @@ html.dark .ace-root {
   --ace-accent: #e88a5c;
   --ace-accent-soft: #2c1f16;
   --ace-mark: #4a3a10;
+}
+
+/* Source citation — shown below any widget that has a `source` field in
+   site.config.json. Trust signal: every AI-generated claim is traceable to
+   the student's own lecture material. Small, muted — reads like a footnote. */
+.ace-root .ace-widget-wrap { margin: 0 0 4px; }
+.ace-root .ace-source {
+  font-family: var(--ace-sans);
+  font-size: 11.5px;
+  color: var(--ace-muted);
+  max-width: 92ch;
+  margin: -8px 0 16px;
+  padding-left: 2px;
+  letter-spacing: 0.01em;
+  font-style: italic;
 }
 
 /* Error boundary — surfaces broken widgets instead of white-screening */

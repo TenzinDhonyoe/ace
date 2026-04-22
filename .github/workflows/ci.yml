@@ -35,7 +35,7 @@ jobs:
       - run: bun install --frozen-lockfile
       - name: Bundle size check
         run: |
-          # Bundle the full @ace/components entry point and report size.
+          # Bundle the full ace-study-components entry point and report size.
           # Budget: 25KB raw (~10KB gzipped). Fail if it balloons past 40KB raw.
           bun build packages/ace-components/index.js --outfile /tmp/ace.js --minify
           SIZE=$(wc -c < /tmp/ace.js)

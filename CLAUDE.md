@@ -35,13 +35,13 @@ output/                    # generated site lands here (gitignored)
 bun install       # one-time, also needed before running the skill
 bun test          # runs all 59 tests across 9 files
 bun run eval      # generator quality harness
-bunx @ace/template output/site.config.json -o output/   # manual render after editing config
+bunx ace-study-template output/site.config.json -o output/   # manual render after editing config
 ```
 
 ## When the user asks for...
 
 - **"generate a review site" / "build my study site" / "help me study for X"** → invoke the `ace-review` skill (`.claude/skills/ace-review/SKILL.md`). This is the primary entrypoint. Do not hand-author widgets inline.
-- **"edit a widget"** → they should hand-edit `output/site.config.json` and re-run `bunx @ace/template`. Don't regenerate from PDFs.
+- **"edit a widget"** → they should hand-edit `output/site.config.json` and re-run `bunx ace-study-template`. Don't regenerate from PDFs.
 - **"add a new widget type"** → add a folder under `packages/ace-components/src/<new-type>/`, export from `registry.js`, add the type to the enum in `schemas/site-config.schema.json`, write tests.
 - **"my site doesn't work in Safari private mode"** → localStorage falls back to in-memory (`src/lib/storage.js`). Widgets should still render.
 

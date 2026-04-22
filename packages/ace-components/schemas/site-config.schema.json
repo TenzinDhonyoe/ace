@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft-07/schema#",
   "$id": "https://ace.study/schemas/site-config/v0.1",
   "title": "Ace Site Config",
-  "description": "The structured specification emitted by the generator and rendered by @ace/template. Version 0.1.",
+  "description": "The structured specification emitted by the generator and rendered by ace-study-template. Version 0.1.",
   "type": "object",
   "required": ["version", "meta", "sections"],
   "additionalProperties": false,
@@ -97,7 +97,7 @@
         "type": {
           "type": "string",
           "enum": ["slider-sandbox", "flashcard", "mcq-quiz", "diagram-label", "concept-card", "prose"],
-          "description": "Widget type — must match a key in the @ace/components registry"
+          "description": "Widget type — must match a key in the ace-study-components registry"
         },
         "id": {
           "type": "string",
@@ -107,6 +107,18 @@
         "props": {
           "type": "object",
           "description": "Widget-specific props. Validated at mount time against the widget's own schema."
+        },
+        "source": {
+          "description": "Where this widget's content came from in the source material. Shown as a small caption below the widget so students can verify claims against their own lectures. Use a single string for one citation (e.g., 'Lecture 3, p. 7') or an array of strings for multiple sources. Omit if the widget is not traceable to a specific source.",
+          "oneOf": [
+            { "type": "string", "minLength": 1, "maxLength": 200 },
+            {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 6,
+              "items": { "type": "string", "minLength": 1, "maxLength": 200 }
+            }
+          ]
         }
       }
     }

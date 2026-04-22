@@ -45,5 +45,5 @@ try {
   console.log(`Wrote ${outDir}/index.html (${html.length} bytes) + ace-components`);
 } catch (e) {
   console.warn(`Wrote HTML but failed to copy components: ${e.message}`);
-  console.warn(`Point --bundle-url at a URL hosting @ace/components.`);
+  console.warn(`Point --bundle-url at a URL hosting ace-study-components.`);
 }

@@ -14,8 +14,8 @@ Every student studies by re-reading lectures and asking ChatGPT to "quiz me." No
 
 This repo ships three things:
 
-1. **`@ace/components`** — a framework-agnostic library of 5 widgets (sliders wired to equations, flashcards, MCQs, diagram labels, concept cards). Works in plain HTML, React, Vue, anything.
-2. **`@ace/template`** — a renderer that turns a `site.config.json` into a deployable HTML file.
+1. **`ace-study-components`** — a framework-agnostic library of 5 widgets (sliders wired to equations, flashcards, MCQs, diagram labels, concept cards). Works in plain HTML, React, Vue, anything.
+2. **`ace-study-template`** — a renderer that turns a `site.config.json` into a deployable HTML file.
 3. **`ace-skill`** — a Claude skill that, given lecture PDFs + exam structure, emits the `site.config.json` and invokes the renderer.
 
 The component library is the real IP. The generator is the flagship demo.
@@ -46,12 +46,36 @@ The skill auto-loads from `.claude/skills/ace-review/SKILL.md` in this repo.
 It reads every PDF, builds `./output/site.config.json`, renders `./output/index.html`,
 and reports done. No manual widget wiring.
 
-Open `output/index.html` in a browser, or drag `output/` onto Vercel to deploy.
+Open `output/index.html` in a browser directly, or share with classmates via one-click deploy.
 
 **Edit without regenerating:** hand-edit `output/site.config.json`, then:
 ```bash
-bunx @ace/template output/site.config.json -o output/
+bunx ace-study-template output/site.config.json -o output/
 ```
+
+---
+
+## Deploy your generated site
+
+The renderer outputs a fully self-contained static site. Any static host works. Three one-command options:
+
+**Vercel (CLI):**
+```bash
+npx vercel --prod output/
+```
+First run asks you to sign in. Subsequent deploys are one command.
+
+**Netlify (CLI):**
+```bash
+npx netlify deploy --prod --dir=output/
+```
+
+**Drag-and-drop (no CLI):**
+1. Open [vercel.com/new](https://vercel.com/new) or [app.netlify.com/drop](https://app.netlify.com/drop).
+2. Drag the `output/` folder onto the page.
+3. Get a public URL in ~10 seconds.
+
+Your classmates open the URL and study. They don't need Bun, Claude Code, or any install — it's just HTML + JS.
 
 ---
 
@@ -60,10 +84,10 @@ bunx @ace/template output/site.config.json -o output/
 **Use the widget library in any site:**
 
 ```html
-<link rel="stylesheet" href="https://unpkg.com/@ace/components/styles.css">
+<link rel="stylesheet" href="https://unpkg.com/ace-study-components/styles.css">
 <div id="mount"></div>
 <script type="module">
-  import { SliderSandbox } from "https://unpkg.com/@ace/components";
+  import { SliderSandbox } from "https://unpkg.com/ace-study-components";
   new SliderSandbox().mount(
     document.getElementById("mount"),
     {
@@ -105,7 +129,7 @@ packages/
     styles.css            # shared CSS (BEM-prefixed with ace-)
   ace-template/           # site.config.json → HTML renderer + CLI
 ace-skill/                # Claude skill (markdown) for non-dev students
-eval/                     # generator quality harness (3 golden cases)
+eval/                     # generator quality harness (5 golden cases across engineering, bio, chem, CS, humanities)
 apps/
   gallery/                # landing page with live widget embeds
 ```
@@ -125,7 +149,7 @@ apps/
 
 ```bash
 bun install
-bun test             # all 59 tests across 9 files
+bun test             # all 88 tests across 11 files
 bun run eval         # run generator quality harness
 ```
 
@@ -139,7 +163,7 @@ Phase 1 (this repo) — building. Expect rough edges.
 
 Roadmap:
 - Phase 2: hosted web app at ace.study — PDFs in the browser, site out. Charged per generation for non-dev students.
-- Phase 3: `ace-components` adopted by other ed-tech tools. That's the North Star.
+- Phase 3: `ace-study-components` adopted by other ed-tech tools. That's the North Star.
 
 ---
 

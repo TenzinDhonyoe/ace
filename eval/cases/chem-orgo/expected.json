@@ -1,0 +1,13 @@
+{
+  "minSections": 3,
+  "maxSections": 6,
+  "maxWidgetsPerSection": 8,
+  "widgetDistribution": {
+    "slider-sandbox": { "max": 2 },
+    "flashcard": { "min": 2 },
+    "mcq-quiz": { "min": 1 },
+    "diagram-label": { "min": 1 }
+  },
+  "mustMention": ["sn2", "sn1", "markovnikov"],
+  "_note": "Organic chem eval. Mechanism-heavy — diagram-label shines for mechanism identification. Slider-sandboxes are optional here since most orgo concepts aren't continuous equations. If the generator forces slider-sandboxes into orgo that's a failure mode to catch."
+}

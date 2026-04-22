@@ -73,6 +73,65 @@ describe("renderSite", () => {
     expect(html).toMatch(/cdn\.example\.com\/ace\.css/);
   });
 
+  it("renders source caption when widget has a source string", () => {
+    const cited = {
+      ...validConfig,
+      sections: [{
+        ...validConfig.sections[0],
+        widgets: [{
+          type: "concept-card",
+          id: "c1",
+          props: { question: "q", answer: "a" },
+          source: "Lecture 3, p. 7"
+        }]
+      }]
+    };
+    const html = renderSite(cited);
+    expect(html).toMatch(/class="ace-source">from Lecture 3, p\. 7/);
+    expect(html).toMatch(/class="ace-widget-wrap"/);
+  });
+
+  it("joins multiple sources with middle dot", () => {
+    const cited = {
+      ...validConfig,
+      sections: [{
+        ...validConfig.sections[0],
+        widgets: [{
+          type: "concept-card",
+          id: "c1",
+          props: { question: "q", answer: "a" },
+          source: ["Lecture 3, p. 7", "Lecture 4, p. 2"]
+        }]
+      }]
+    };
+    const html = renderSite(cited);
+    expect(html).toMatch(/Lecture 3, p\. 7 · Lecture 4, p\. 2/);
+  });
+
+  it("omits source wrapper when no source provided", () => {
+    const html = renderSite(validConfig);
+    expect(html).not.toMatch(/ace-widget-wrap/);
+    expect(html).not.toMatch(/ace-source/);
+  });
+
+  it("escapes HTML in source", () => {
+    const cited = {
+      ...validConfig,
+      sections: [{
+        ...validConfig.sections[0],
+        widgets: [{
+          type: "concept-card",
+          id: "c1",
+          props: { question: "q", answer: "a" },
+          source: "<script>alert(1)</script>"
+        }]
+      }]
+    };
+    const html = renderSite(cited);
+    expect(html).not.toMatch(/<script>alert/);
+    expect(html).toMatch(/&lt;script&gt;/);
+  });
+
   it("includes nav links for every section", () => {
     const multi = {
       ...validConfig,

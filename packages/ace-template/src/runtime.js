@@ -1,4 +1,4 @@
-// Client-side runtime for @ace/template-rendered sites.
+// Client-side runtime for ace-study-template-rendered sites.
 //
 // Exports `runtimeScript()` — returns a string of JavaScript to inline into
 // the generated HTML. The runtime handles everything that depends on the

@@ -1,7 +1,7 @@
 {
-  "name": "@ace/template",
-  "version": "0.0.1",
-  "description": "Renders an ace site.config.json into a self-contained HTML file",
+  "name": "ace-study-template",
+  "version": "0.1.0",
+  "description": "Renders an ace site.config.json into a self-contained HTML study site. Ships with a CLI.",
   "license": "MIT",
   "type": "module",
   "main": "./src/render.js",
@@ -17,6 +17,14 @@
     "test": "bun test"
   },
   "dependencies": {
-    "@ace/components": "workspace:*"
-  }
+    "ace-study-components": "workspace:*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TenzinDhonyoe/ace.git",
+    "directory": "packages/ace-template"
+  },
+  "homepage": "https://github.com/TenzinDhonyoe/ace#readme",
+  "bugs": "https://github.com/TenzinDhonyoe/ace/issues",
+  "keywords": ["education", "study", "ai-generated", "interactive", "exam-prep", "static-site", "html-generator"]
 }

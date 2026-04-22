@@ -7,7 +7,7 @@
 //   - search palette, help overlay, side-backdrop for mobile — DOM lives in HTML,
 //     behavior lives in runtime.js inlined as a <script>.
 
-import { validate, siteConfigSchema, widgetTypes } from "@ace/components";
+import { validate, siteConfigSchema, widgetTypes } from "ace-study-components";
 import { runtimeScript } from "./runtime.js";
 
 export function renderSite(config, opts = {}) {
@@ -128,18 +128,34 @@ function renderSection(section) {
   ];
   // Flat widgets (if any)
   for (const w of widgets) {
-    lines.push(`        <div id="${escapeHtml(mountId(section.id, w.id))}"></div>`);
+    lines.push(renderWidgetMount(section.id, w));
   }
   // Subtopics (if any)
   for (const sub of subtopics) {
     lines.push(`        <h3 id="${escapeHtml(sub.id)}">${escapeHtml(sub.title)}</h3>`);
     if (sub.summary) lines.push(`        <p class="ace-sub-lede">${escapeHtml(sub.summary)}</p>`);
     for (const w of (sub.widgets || [])) {
-      lines.push(`        <div id="${escapeHtml(mountId(section.id, w.id))}"></div>`);
+      lines.push(renderWidgetMount(section.id, w));
     }
   }
   lines.push(`      </section>`);
   return lines.filter(Boolean).join("\n");
+}
+
+// Wraps a widget mount div with an optional source caption. Source citations
+// are widget-type-agnostic — they live in the template layer so every widget
+// type gets the same trust signal without per-widget code changes.
+function renderWidgetMount(sectionId, w) {
+  const mount = `        <div id="${escapeHtml(mountId(sectionId, w.id))}"></div>`;
+  if (!w.source) return mount;
+  const sources = Array.isArray(w.source) ? w.source : [w.source];
+  const caption = sources.map(escapeHtml).join(" · ");
+  return [
+    `        <div class="ace-widget-wrap">`,
+    mount,
+    `          <div class="ace-source">from ${caption}</div>`,
+    `        </div>`,
+  ].join("\n");
 }
 
 function renderPalette() {

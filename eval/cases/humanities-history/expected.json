@@ -1,0 +1,13 @@
+{
+  "minSections": 3,
+  "maxSections": 6,
+  "maxWidgetsPerSection": 8,
+  "widgetDistribution": {
+    "slider-sandbox": { "max": 0 },
+    "flashcard": { "min": 2 },
+    "mcq-quiz": { "min": 1 },
+    "concept-card": { "min": 1 }
+  },
+  "mustMention": ["versailles", "barbarossa"],
+  "_note": "Humanities eval. Non-quantitative — slider-sandboxes should NOT appear (max 0). If the generator force-fits a slider-sandbox onto WWI ('slide the year to see casualties'), that's a critical failure mode. The generator must recognize the course is non-quantitative and lean on flashcards + concept-cards + MCQs instead, as SKILL.md's 'Non-quantitative content' section instructs."
+}

@@ -10,7 +10,7 @@ You are generating an interactive exam review site from the lecture PDFs in `./i
 1. Discover inputs
 2. Read every PDF
 3. Compose `site.config.json`
-4. Render HTML via `@ace/template`
+4. Render HTML via `ace-study-template`
 5. Report completion
 
 ## Step 1 — Discover and orient
@@ -208,28 +208,37 @@ Cap: **8 widgets per section max.** Exceeding means you should split the section
 
 ### Hard rules (non-negotiable)
 
-1. **Never invent equations not in the PDFs.** Every equation you put in a slider-sandbox must be traceable to a specific page. Include page numbers in the section `summary` or widget `description` where possible.
-2. **Every MCQ distractor is a plausible misconception from the lecture**, not a random wrong answer. A student who nearly knows the material should be tempted.
-3. **Flashcard answers are 1-3 sentences.** No filler. Every word earns its place.
-4. **Prefer fewer widgets, used well.**
-5. **Every widget `type` must be one of:** `slider-sandbox`, `flashcard`, `mcq-quiz`, `diagram-label`, `concept-card`. No others exist.
+1. **Never invent equations not in the PDFs.** Every equation you put in a slider-sandbox must be traceable to a specific page.
+2. **Cite the source on every widget that makes a factual claim.** Populate the widget-level `source` field (sibling to `type`, `id`, `props`) with a short caption like `"Lecture 3, p. 7"` or `"Biosensors lecture, p. 12–14"`. Required for every `slider-sandbox`, `diagram-label`, `concept-card`, and `mcq-quiz`. Optional for `flashcard` decks (the deck as a whole can carry one source, or omit if cards span many pages). The renderer displays this as a small caption beneath the widget so students can verify against their own PDFs — this is the trust signal that separates Ace from generic quiz generators. Use an array of strings if more than one source applies: `"source": ["Lecture 3, p. 7", "Lecture 4, p. 2"]`.
+3. **Every MCQ distractor is a plausible misconception from the lecture**, not a random wrong answer. A student who nearly knows the material should be tempted.
+4. **Flashcard answers are 1-3 sentences.** No filler. Every word earns its place.
+5. **Prefer fewer widgets, used well.**
+6. **Every widget `type` must be one of:** `slider-sandbox`, `flashcard`, `mcq-quiz`, `diagram-label`, `concept-card`, `prose`. No others exist.
 
 ## Step 4 — Render to HTML
 
-After writing `output/site.config.json`, run:
+After writing `output/site.config.json`, resolve the renderer in this order (try each; stop at the first that works):
 
+**A. npm-published (preferred, works from any directory):**
+```bash
+bunx ace-study-template output/site.config.json -o output/
+# or, if bun isn't available:
+npx --yes ace-study-template output/site.config.json -o output/
+```
+
+**B. Local monorepo checkout (student cloned the ace repo):**
 ```bash
 bun install 2>&1 | tail -3
-bunx --bun @ace/template output/site.config.json -o output/
+bun packages/ace-template/bin/cli.js output/site.config.json -o output/
 ```
 
-If `bun install` fails or `@ace/template` is not found, run instead:
-
+**C. Arbitrary cwd but repo is elsewhere on disk:**
+Locate the repo root by looking for `packages/ace-template/bin/cli.js` upward from the user's cwd, or ask the user for the path. Then:
 ```bash
-bun /Users/tenzindhonyoe/Desktop/side_proj/ace/packages/ace-template/bin/cli.js output/site.config.json -o output/
+bun "<repo>/packages/ace-template/bin/cli.js" output/site.config.json -o output/
 ```
 
-(Use the absolute path or the relative path from the repo root, depending on the user's cwd.)
+Never hardcode an absolute path. The skill should work for any user on any machine.
 
 This produces:
 - `output/index.html` — open in a browser
@@ -244,6 +253,7 @@ Before declaring done, verify:
 - [ ] Every widget `type` is one of the 5 known types
 - [ ] Every section has ≤ 8 widgets
 - [ ] Every equation in a slider-sandbox is traceable to the PDFs
+- [ ] Every `slider-sandbox`, `diagram-label`, `concept-card`, and `mcq-quiz` has a `source` field populated
 - [ ] Every MCQ distractor is a plausible misconception
 - [ ] Every flashcard answer is 1-3 sentences
 - [ ] `output/index.html` exists
@@ -252,7 +262,7 @@ Report to the user:
 
 > "Generated `<course>` review site: N sections, W widgets total (S sliders, F flashcards, M MCQs, D diagrams, C concept cards). Open `output/index.html` in a browser, or drag `output/` onto Vercel to deploy.
 >
-> To edit: hand-edit `output/site.config.json` then re-run `bunx @ace/template output/site.config.json -o output/`."
+> To edit: hand-edit `output/site.config.json` then re-run `bunx ace-study-template output/site.config.json -o output/`."
 
 ## Non-quantitative content
 
@@ -265,6 +275,6 @@ If the course is non-quantitative (history, literature, memorization-heavy biolo
 | `inputs/` is empty | STOP, tell user to add PDFs |
 | PDF won't read (scanned image, corrupted) | Tell user, skip that PDF, proceed with the rest |
 | Context window pressure mid-generation | Write partial `site.config.json` to disk every section, summarize prior sections from the written file |
-| `@ace/template` not installed | Fall back to the absolute-path invocation of `cli.js` |
+| `ace-study-template` not installed | Fall back to the absolute-path invocation of `cli.js` |
 | Renderer rejects the config | Read the error, fix the specific field in `site.config.json`, re-run |
 | Content doesn't fit any widget | Use `concept-card` as a fallback (it's just Q/A) |

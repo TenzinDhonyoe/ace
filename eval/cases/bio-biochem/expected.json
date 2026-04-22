@@ -1,0 +1,13 @@
+{
+  "minSections": 3,
+  "maxSections": 6,
+  "maxWidgetsPerSection": 8,
+  "widgetDistribution": {
+    "slider-sandbox": { "min": 1, "max": 4 },
+    "flashcard": { "min": 1 },
+    "mcq-quiz": { "min": 1 },
+    "concept-card": { "min": 1 }
+  },
+  "mustMention": ["michaelis", "glycolysis", "atp"],
+  "_note": "Biochem eval. Michaelis-Menten v(S) is the canonical slider-sandbox target (v vs [S] curve, K_m and V_max sliders, show inhibition-type modes). Terminology-heavy, so flashcards dominate."
+}

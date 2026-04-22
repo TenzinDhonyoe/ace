@@ -1,0 +1,12 @@
+{
+  "minSections": 3,
+  "maxSections": 6,
+  "maxWidgetsPerSection": 8,
+  "widgetDistribution": {
+    "slider-sandbox": { "min": 1 },
+    "flashcard": { "min": 1 },
+    "mcq-quiz": { "min": 1 }
+  },
+  "mustMention": ["big-o", "quicksort", "dijkstra"],
+  "_note": "CS eval. Big-O growth-rate sandbox is the natural slider-sandbox (plot n, n log n, n² as n varies — feel the asymptotic difference). Hash table load-factor → collision-count is another. Failure mode to catch: generator makes flashcards of algorithm names but doesn't build the growth-rate sandbox. That's the lazy path."
+}
