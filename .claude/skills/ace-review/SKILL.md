@@ -17,12 +17,25 @@ You are generating an interactive exam review site from the lecture PDFs in `./i
 
 Run these checks first, in this order. Never skip.
 
+**Bun preflight.** Ace depends on Bun for both `bun install` and the renderer CLI. Check it exists:
+
+```bash
+command -v bun >/dev/null 2>&1 && bun --version || echo "BUN_MISSING"
+```
+
+If the output is `BUN_MISSING`, STOP and tell the user:
+> "Bun is required. Install it from https://bun.sh (one-line install), then run `/ace-review` again."
+
+Do not attempt to fall back to `npm` or `npx` — the renderer CLI and the test suite both assume Bun.
+
+**Inputs check.**
+
 ```bash
 ls -la inputs/ 2>/dev/null
 ```
 
 If `inputs/` is empty or missing, STOP and tell the user:
-> "I need lecture PDFs in `./inputs/` to generate a site. Drop your PDFs in that folder (plus an optional `inputs/exam-structure.md` describing the exam format and sections to cover), then re-run me."
+> "I need lecture PDFs in `./inputs/` to generate a site. Drop your PDFs in that folder (plus an optional `inputs/exam-structure.md` describing the exam format and sections to cover), then run `/ace-review` again in this same session."
 
 Read `inputs/exam-structure.md` if it exists. If it's missing, ask the user once for:
 - Course code (e.g., BME804)
@@ -34,6 +47,12 @@ Then proceed. If the user just says "go" or the answers are too vague, infer fro
 ## Step 2 — Read every PDF
 
 Use the Read tool on each `inputs/*.pdf` file. Claude Code reads PDFs natively (text + images via the API).
+
+**After reading each PDF, emit one progress line** so the user knows something is happening during long multi-PDF runs. Format:
+
+> `Read <filename> — N pages, E equations, F figures.`
+
+Count what you actually saw. Ballpark figures are fine; this is a status signal, not a metric.
 
 **If a single PDF exceeds ~30 pages or you get close to token limits:**
 - Read it in chunks (pages 1–20, then 21–40, etc.)
@@ -64,6 +83,17 @@ from the package.
 Then write `./output/site.config.json` following the rules you just read. The
 schema lives at `packages/ace-components/schemas/site-config.schema.json` —
 consult it for exact field shapes.
+
+## Step 3.5 — Self-validate the config before rendering
+
+Before calling the renderer, re-open `packages/ace-components/schemas/site-config.schema.json` and check `output/site.config.json` against it. You do not need a validator tool — do the check by reading:
+
+- Every widget's `type` is one of the enum values (`slider-sandbox`, `flashcard`, `mcq-quiz`, `diagram-label`, `concept-card`).
+- Every widget has an `id` and every required field for its type.
+- Every section has `id`, `title`, and a `widgets` array.
+- `site.id`, `site.title`, and `site.sections` are all present.
+
+If anything fails, fix the config in place and re-check before moving on. This catches ~90% of the errors that would otherwise surface as a renderer stack trace.
 
 ## Step 4 — Render to HTML
 
@@ -105,11 +135,22 @@ packages/ace-study-prompts/src/self-check.md
 
 Then confirm `output/index.html` exists (the renderer step succeeded).
 
-Report to the user:
+Report to the user. Use this template and fill in the actual counts and percentages:
 
-> "Generated `<course>` review site: N sections, W widgets total (S sliders, F flashcards, M MCQs, D diagrams, C concept cards). Open `output/index.html` in a browser, or drag `output/` onto Vercel to deploy.
+> "Generated `<course>` review site: N sections, W widgets total.
 >
-> To edit: hand-edit `output/site.config.json` then re-run `bunx ace-study-template output/site.config.json -o output/`."
+> **Widget mix:** S% sliders · F% flashcards · M% MCQs · D% diagrams · C% concept cards.
+> (Target for quantitative courses: sliders ≥ 30%. For humanities, expect flashcards/concept cards to dominate — that's fine.)
+>
+> **Inferred structure:** [only include this line if `inputs/exam-structure.md` was missing or too vague] course code `<course>`, format `<format>`, `<N>` sections — inferred from PDF contents. If wrong, edit the `sections` array in `output/site.config.json` and re-render.
+>
+> **Open it:** `open output/index.html` — or drag `output/` onto https://app.netlify.com/drop.
+>
+> **Edit without regenerating:** hand-edit `output/site.config.json`, then re-render with:
+> ```
+> bun packages/ace-template/bin/cli.js output/site.config.json -o output/
+> ```
+> (Keep in sync with Step 4 path A — this is the same command.)"
 
 ## Failure modes and what to do
 
