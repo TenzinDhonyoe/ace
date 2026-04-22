@@ -219,17 +219,17 @@ Cap: **8 widgets per section max.** Exceeding means you should split the section
 
 After writing `output/site.config.json`, resolve the renderer in this order (try each; stop at the first that works):
 
-**A. npm-published (preferred, works from any directory):**
+**A. Local monorepo checkout (the default today — student cloned the ace repo):**
+```bash
+test -f packages/ace-template/bin/cli.js && bun install 2>&1 | tail -3
+bun packages/ace-template/bin/cli.js output/site.config.json -o output/
+```
+
+**B. npm-published (works once the packages are on npm — currently unpublished, so this path will 404):**
 ```bash
 bunx ace-study-template output/site.config.json -o output/
 # or, if bun isn't available:
 npx --yes ace-study-template output/site.config.json -o output/
-```
-
-**B. Local monorepo checkout (student cloned the ace repo):**
-```bash
-bun install 2>&1 | tail -3
-bun packages/ace-template/bin/cli.js output/site.config.json -o output/
 ```
 
 **C. Arbitrary cwd but repo is elsewhere on disk:**
@@ -238,7 +238,7 @@ Locate the repo root by looking for `packages/ace-template/bin/cli.js` upward fr
 bun "<repo>/packages/ace-template/bin/cli.js" output/site.config.json -o output/
 ```
 
-Never hardcode an absolute path. The skill should work for any user on any machine.
+Never hardcode an absolute path. The skill should work for any user on any machine. Path A is preferred while the packages are unpublished because it avoids a network round-trip and a guaranteed 404. Flip A/B once `ace-study-template` is live on npm.
 
 This produces:
 - `output/index.html` — open in a browser
