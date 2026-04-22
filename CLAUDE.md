@@ -25,7 +25,7 @@ output/                    # generated site lands here (gitignored)
 - **Component library is vanilla JS** — no React, no build step. Works in static HTML, React, Vue, anywhere.
 - **JSON Schema is the contract with the generator.** Per-widget schemas in `packages/ace-components/src/<type>/schema.json`; site-config schema in `packages/ace-components/schemas/site-config.schema.json`. The widget `registry` in `packages/ace-components/registry.js` is the authoritative list.
 - **localStorage is namespaced `ace:<siteId>:<widgetId>:<key>`** so multiple generated sites deployed under the same domain don't collide.
-- **Bundle budget: 15KB gzipped** for the full component library. CI enforces 40KB raw ceiling.
+- **Bundle budget: 15KB gzipped** target (currently ~10.6KB). CI enforces a 32KB raw ceiling (currently ~30.4KB — tight on purpose, so regressions land loudly).
 - **Never invent equations** not present in the user's PDFs. Cite page numbers for every equation in a slider-sandbox.
 - **MCQ distractors must be plausible misconceptions**, not random wrong answers.
 
@@ -33,7 +33,7 @@ output/                    # generated site lands here (gitignored)
 
 ```bash
 bun install       # one-time, also needed before running the skill
-bun test          # runs all 59 tests across 9 files
+bun test          # runs all 94 tests across 12 files
 bun run eval      # generator quality harness
 bunx ace-study-template output/site.config.json -o output/   # manual render after editing config
 ```

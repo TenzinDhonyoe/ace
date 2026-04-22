@@ -22,9 +22,6 @@ jobs:
       - name: Run tests
         run: bun test
 
-      - name: Validate all widget examples against their schemas
-        run: bun test packages/ace-components/test/registry.test.js
-
   size:
     runs-on: ubuntu-latest
     steps:
@@ -36,11 +33,12 @@ jobs:
       - name: Bundle size check
         run: |
           # Bundle the full ace-study-components entry point and report size.
-          # Budget: 25KB raw (~10KB gzipped). Fail if it balloons past 40KB raw.
+          # Target: ~15KB gzipped (~32KB raw). Fail past 32KB raw so regressions
+          # land loudly. Current baseline is ~30KB raw / ~10.6KB gzipped.
           bun build packages/ace-components/index.js --outfile /tmp/ace.js --minify
           SIZE=$(wc -c < /tmp/ace.js)
           echo "Bundle size: $SIZE bytes"
-          if [ $SIZE -gt 40960 ]; then
-            echo "ERROR: bundle exceeded 40KB raw budget"
+          if [ $SIZE -gt 32768 ]; then
+            echo "ERROR: bundle exceeded 32KB raw ceiling ($SIZE bytes)"
             exit 1
           fi

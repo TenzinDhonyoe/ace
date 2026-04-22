@@ -11,56 +11,75 @@ import { join } from "node:path";
 
 const CASES_DIR = new URL("./cases/", import.meta.url).pathname;
 
-const filter = process.argv.find((a, i) => process.argv[i - 1] === "--case");
+// Only run the harness when invoked directly (e.g. `bun run eval`). When this
+// module is imported (e.g. by run.test.js for unit tests), skip the script body.
+if (import.meta.main) {
+  const filter = process.argv.find((a, i) => process.argv[i - 1] === "--case");
 
-let cases;
-try {
-  cases = readdirSync(CASES_DIR, { withFileTypes: true })
-    .filter((d) => d.isDirectory())
-    .map((d) => d.name);
-} catch {
-  console.log("No eval/cases/ directory yet — add a case with `mkdir eval/cases/<name>/`.");
-  process.exit(0);
-}
-
-if (filter) cases = cases.filter((c) => c === filter);
-if (cases.length === 0) {
-  console.log("No eval cases to run.");
-  process.exit(0);
-}
-
-let pass = 0, fail = 0;
-
-for (const name of cases) {
-  const dir = join(CASES_DIR, name);
-  const expectedPath = join(dir, "expected.json");
-  const generatedPath = join(dir, "generated.config.json");
-
-  if (!existsSync(expectedPath)) {
-    console.log(`⊘  ${name}: no expected.json — skipping`);
-    continue;
-  }
-  if (!existsSync(generatedPath)) {
-    console.log(`⊘  ${name}: no generated.config.json (run the generator against inputs/ first)`);
-    continue;
+  let cases;
+  try {
+    cases = readdirSync(CASES_DIR, { withFileTypes: true })
+      .filter((d) => d.isDirectory())
+      .map((d) => d.name);
+  } catch {
+    console.log("No eval/cases/ directory yet — add a case with `mkdir eval/cases/<name>/`.");
+    process.exit(0);
   }
 
-  const expected = JSON.parse(readFileSync(expectedPath, "utf8"));
-  const generated = JSON.parse(readFileSync(generatedPath, "utf8"));
-  const failures = check(generated, expected);
-
-  if (failures.length === 0) {
-    console.log(`✓  ${name}`);
-    pass++;
-  } else {
-    console.log(`✗  ${name}`);
-    for (const f of failures) console.log(`     ${f}`);
-    fail++;
+  if (filter) cases = cases.filter((c) => c === filter);
+  if (cases.length === 0) {
+    console.log("No eval cases to run.");
+    process.exit(0);
   }
+
+  let pass = 0, fail = 0, skipped = 0;
+
+  for (const name of cases) {
+    const dir = join(CASES_DIR, name);
+    const expectedPath = join(dir, "expected.json");
+    const generatedPath = join(dir, "generated.config.json");
+
+    if (!existsSync(expectedPath)) {
+      console.log(`⊘  ${name}: no expected.json — skipping`);
+      skipped++;
+      continue;
+    }
+    if (!existsSync(generatedPath)) {
+      console.log(`⊘  ${name}: no generated.config.json (run the generator against inputs/ first)`);
+      skipped++;
+      continue;
+    }
+
+    const expected = JSON.parse(readFileSync(expectedPath, "utf8"));
+    const generated = JSON.parse(readFileSync(generatedPath, "utf8"));
+    const failures = check(generated, expected);
+
+    if (failures.length === 0) {
+      console.log(`✓  ${name}`);
+      pass++;
+    } else {
+      console.log(`✗  ${name}`);
+      for (const f of failures) console.log(`     ${f}`);
+      fail++;
+    }
+  }
+
+  console.log(`\n${pass} pass · ${fail} fail · ${skipped} skipped`);
+  process.exit(evalExitCode({ pass, fail, skipped }));
 }
 
-console.log(`\n${pass} pass · ${fail} fail`);
-process.exit(fail === 0 ? 0 : 1);
+// Decide the exit code after all cases run. Surface silent skips as failures.
+// Exit codes:
+//   0 — at least one case ran and all ran cases passed
+//   1 — one or more ran cases failed
+//   2 — nothing actually ran (every case skipped). False-green guard: a green
+//       eval should mean "we checked something," not "we checked nothing."
+//       Use 2 (distinct from 1) so CI can distinguish "broken" from "unconfigured."
+export function evalExitCode({ pass, fail, skipped }) {
+  if (fail > 0) return 1;
+  if (pass === 0 && skipped > 0) return 2;
+  return 0;
+}
 
 function check(generated, expected) {
   const failures = [];

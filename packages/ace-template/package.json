@@ -14,7 +14,11 @@
   },
   "files": ["src/", "bin/", "README.md"],
   "scripts": {
-    "test": "bun test"
+    "test": "bun test",
+    "prepublishOnly": "bun test"
+  },
+  "engines": {
+    "bun": ">=1.3.0"
   },
   "dependencies": {
     "ace-study-components": "workspace:*"
