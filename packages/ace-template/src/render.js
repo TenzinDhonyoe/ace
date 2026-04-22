@@ -1,4 +1,9 @@
-// Renders an ace site.config.json into a single self-contained HTML file.
+// Renders an ace site.config.json into a single self-contained HTML string.
+//
+// Pure function. No filesystem access, no network calls, no globals mutated.
+// Safe to run in any JavaScript runtime: Node, Bun, Deno, Cloudflare Workers,
+// the browser. This is the contract the hosted generator (ace-study-web)
+// depends on.
 //
 // Layout ported from the hand-tuned BME804 reference:
 //   - sticky header with title, progress pill, search, quiz jump, help, theme toggle
@@ -10,6 +15,25 @@
 import { validate, siteConfigSchema, widgetTypes } from "ace-study-components";
 import { runtimeScript } from "./runtime.js";
 
+/**
+ * Render a validated site.config into a complete HTML document.
+ *
+ * @param {object} config  A site.config.json object. Validated against
+ *   site-config.schema.json; throws on invalid input.
+ * @param {object} [opts]
+ * @param {string} [opts.componentsBundleUrl="./ace-components.js"]
+ *   URL the generated HTML will load the widget bundle from. Use a CDN URL
+ *   (e.g. `https://unpkg.com/ace-study-components@0.2/index.js`) when hosting
+ *   generated sites without copying the bundle alongside them.
+ * @param {string} [opts.stylesUrl="./ace-styles.css"]
+ *   URL for the shared stylesheet. Same CDN pattern applies.
+ *
+ * @returns {string}  A complete, self-contained HTML document. The caller is
+ *   responsible for writing it wherever (disk, R2, response body, etc).
+ *
+ * @throws {Error} If `config` fails schema validation or references an
+ *   unknown widget type.
+ */
 export function renderSite(config, opts = {}) {
   const result = validate(config, siteConfigSchema);
   if (!result.valid) {
@@ -303,4 +327,13 @@ function slug(s) { return String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-").re
 function escapeHtml(s) {
   return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
-function escapeJs(s) { return String(s).replace(/\\/g, "\\\\").replace(/"/g, '\\"'); }
+// Escape a string for safe interpolation into a JS string literal inside a
+// <script> tag. HTML parsing always wins inside <script>, so even a well-formed
+// JS string can be broken out of with `</script>` in the middle. We also escape
+// `<!--` for good measure (script-in-comment quirk).
+function escapeJs(s) {
+  return String(s)
+    .replace(/\\/g, "\\\\")
+    .replace(/"/g, '\\"')
+    .replace(/<\/(script|!--)/gi, "<\\/$1");
+}

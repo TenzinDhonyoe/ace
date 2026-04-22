@@ -36,6 +36,9 @@ npx vercel --prod output/
 
 ## Programmatic
 
+`renderSite(config, opts?)` is a pure function. No filesystem, no network, no
+globals. Safe to call from Node, Bun, Deno, Cloudflare Workers, the browser.
+
 ```js
 import { renderSite } from "ace-study-template";
 import fs from "node:fs";
@@ -47,6 +50,40 @@ const html = renderSite(config, {
 });
 fs.writeFileSync("output/index.html", html);
 ```
+
+### Use from a Cloudflare Worker (or any edge runtime)
+
+Point `componentsBundleUrl` and `stylesUrl` at a CDN so the generated site
+doesn't need co-located assets.
+
+```js
+import { renderSite } from "ace-study-template";
+
+export default {
+  async fetch(request, env) {
+    const config = await request.json();
+    const html = renderSite(config, {
+      componentsBundleUrl: "https://unpkg.com/ace-study-components@0.2/index.js",
+      stylesUrl:           "https://unpkg.com/ace-study-components@0.2/styles.css",
+    });
+    // Write to R2, return as response body, etc.
+    await env.SITES.put(`${config.siteId}/index.html`, html, {
+      httpMetadata: { contentType: "text/html; charset=utf-8" },
+    });
+    return new Response(config.siteId);
+  },
+};
+```
+
+### Contract
+
+- **Input:** a `site.config.json`-shaped object. Validated against the
+  `site-config.schema.json` in `ace-study-components`; throws on invalid input
+  or unknown widget types.
+- **Output:** a single complete HTML document string. UTF-8 safe.
+- **Determinism:** identical input ⇒ identical output, provided
+  `meta.generatedAt` is fixed. Without `generatedAt`, a `Date.now()` cache-bust
+  token is injected for dev-time convenience.
 
 ## Config shape
 
