@@ -1,6 +1,6 @@
 {
   "name": "ace-study-template",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Pure renderSite(config) function + CLI that turn a site.config.json into a self-contained HTML study site. Runtime-agnostic: Node, Bun, Deno, Workers, browsers.",
   "license": "MIT",
   "type": "module",
@@ -21,7 +21,7 @@
     "bun": ">=1.3.0"
   },
   "dependencies": {
-    "ace-study-components": "workspace:*"
+    "ace-study-components": "^0.1.0"
   },
   "repository": {
     "type": "git",
