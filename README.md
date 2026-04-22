@@ -15,14 +15,22 @@ Reference output: [bme804-review.vercel.app](https://bme804-review.vercel.app/#a
 
 ## Quick start
 
-1. Install Bun and Claude Code (30 seconds — see below)
-2. Clone this repo
-3. Drop your lecture PDFs into `./inputs/`
-4. Open Claude Code, run `/ace-review`
-5. Open `./output/index.html` — or drag `output/` onto Vercel
-6. Share the URL with your class
+**Requirements:** [Bun](https://bun.sh/) 1.3+, [Claude Code](https://claude.com/claude-code), [Git](https://git-scm.com/).
+
+Open Claude Code in any directory and paste this. Claude does the rest.
+
+> Set up Ace for me: run **`git clone https://github.com/tenzindhonyoe/ace my-exam-review && cd my-exam-review && bun install`**, then `cd` into `my-exam-review` for the rest of this session. After install completes, confirm `bun --version` works, check that `packages/ace-template/bin/cli.js` exists, and show me the `inputs/` folder. Then tell me to drop my lecture PDFs into `./inputs/` (and optionally write a short `inputs/exam-structure.md` with Course, Format, and Sections), and that I should run `/ace-review` when I'm ready. Do not run `/ace-review` yourself — wait for me.
+
+Then:
+
+1. Drop your lecture PDFs into `./inputs/`
+2. In Claude Code, run `/ace-review`
+3. Open `./output/index.html` — or drag `output/` onto Vercel
+4. Share the URL with your class
 
 That's the whole loop. No manual widget wiring.
+
+**Prefer to do it yourself?** Every step is spelled out below.
 
 ## Install — step by step
 
