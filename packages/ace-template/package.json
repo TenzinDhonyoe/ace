@@ -1,7 +1,7 @@
 {
   "name": "ace-study-template",
-  "version": "0.1.0",
-  "description": "Renders an ace site.config.json into a self-contained HTML study site. Ships with a CLI.",
+  "version": "0.3.0",
+  "description": "Pure renderSite(config) function + CLI that turn a site.config.json into a self-contained HTML study site. Runtime-agnostic: Node, Bun, Deno, Workers, browsers.",
   "license": "MIT",
   "type": "module",
   "main": "./src/render.js",

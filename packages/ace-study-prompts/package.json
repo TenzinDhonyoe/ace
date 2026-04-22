@@ -1,0 +1,29 @@
+{
+  "name": "ace-study-prompts",
+  "version": "0.1.0",
+  "description": "System prompt + self-check rules for Ace generators. Single source of truth shared by the /ace-review Claude Code skill and the hosted ace.study web app.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./system-prompt.md": "./src/system-prompt.md",
+    "./self-check.md": "./src/self-check.md"
+  },
+  "files": ["src/", "README.md"],
+  "scripts": {
+    "test": "bun test",
+    "prepublishOnly": "bun test"
+  },
+  "engines": {
+    "bun": ">=1.3.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TenzinDhonyoe/ace.git",
+    "directory": "packages/ace-study-prompts"
+  },
+  "homepage": "https://github.com/TenzinDhonyoe/ace#readme",
+  "bugs": "https://github.com/TenzinDhonyoe/ace/issues",
+  "keywords": ["education", "study", "ai-generated", "prompt", "llm", "exam-prep"]
+}

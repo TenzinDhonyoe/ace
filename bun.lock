@@ -14,9 +14,13 @@
       "name": "ace-study-components",
       "version": "0.1.0",
     },
+    "packages/ace-study-prompts": {
+      "name": "ace-study-prompts",
+      "version": "0.1.0",
+    },
     "packages/ace-template": {
       "name": "ace-study-template",
-      "version": "0.1.0",
+      "version": "0.3.0",
       "bin": {
         "ace-template": "./bin/cli.js",
       },
@@ -43,6 +47,8 @@
     "@types/ws": ["@types/ws@8.18.1", "", { "dependencies": { "@types/node": "*" } }, "sha512-ThVF6DCVhA8kUGy+aazFQ4kXQ7E1Ty7A3ypFOe0IcJV8O/M511G99AW24irKrW56Wt44yG9+ij8FaqoBGkuBXg=="],
 
     "ace-study-components": ["ace-study-components@workspace:packages/ace-components"],
+
+    "ace-study-prompts": ["ace-study-prompts@workspace:packages/ace-study-prompts"],
 
     "ace-study-template": ["ace-study-template@workspace:packages/ace-template"],
 
