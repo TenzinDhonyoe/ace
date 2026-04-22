@@ -1,0 +1,84 @@
+{
+  "$id": "https://ace.study/schemas/widgets/slider-sandbox/v0.1",
+  "type": "object",
+  "title": "SliderSandbox props",
+  "description": "Interactive sandbox with 1-6 sliders wired to a live equation, optional SVG, and formatted readouts. The moat widget — nothing else on the market auto-generates working physics simulations from lecture content.",
+  "required": ["title", "variables", "outputs", "compute"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "description": "Stable id for state persistence" },
+    "title": { "type": "string", "description": "Short heading shown above the controls" },
+    "variables": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 6,
+      "description": "Controls the student manipulates",
+      "items": {
+        "type": "object",
+        "required": ["key", "label", "initial"],
+        "additionalProperties": false,
+        "properties": {
+          "key": { "type": "string", "pattern": "^[a-zA-Z_][a-zA-Z0-9_]*$", "description": "JS identifier used as `vars.<key>` in compute" },
+          "label": { "type": "string" },
+          "unit": { "type": "string" },
+          "kind": { "enum": ["range", "number", "select"], "description": "UI control type. Default: range" },
+          "min": { "type": "number" },
+          "max": { "type": "number" },
+          "step": { "type": "number" },
+          "initial": { "description": "Starting value. Must match kind (number for range/number, string for select)" },
+          "options": {
+            "type": "array",
+            "description": "Required when kind=select. Array of {value, label} or plain strings.",
+            "items": {
+              "oneOf": [
+                { "type": "string" },
+                { "type": "object", "required": ["value", "label"], "properties": { "value": {}, "label": { "type": "string" } } }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "outputs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 6,
+      "description": "Named readouts computed from the variables",
+      "items": {
+        "type": "object",
+        "required": ["key", "label"],
+        "additionalProperties": false,
+        "properties": {
+          "key": { "type": "string", "pattern": "^[a-zA-Z_][a-zA-Z0-9_]*$", "description": "Matches a key in the compute() return object" },
+          "label": { "type": "string" },
+          "unit": { "type": "string", "description": "Unit suffix. Use SI form; the widget picks the prefix." },
+          "format": { "enum": ["sci", "si", "fixed"], "description": "Number formatter. Default: si" },
+          "decimals": { "type": "integer", "minimum": 0, "maximum": 6 }
+        }
+      }
+    },
+    "compute": {
+      "type": "string",
+      "description": "JS function body. Receives { vars, consts, status } and returns { <output.key>: number, status?: string, svg?: string }. Example: 'const F = 0.5*consts.eps0*vars.A*vars.V*vars.V/(vars.x*vars.x); return { F, vpi: Math.sqrt(8*vars.k*Math.pow(vars.x,3)/(27*consts.eps0*vars.A)) };'"
+    },
+    "constants": {
+      "type": "object",
+      "description": "Named physical constants accessible as `consts.<key>` in compute. Example: { eps0: 8.854e-12, mu0: 1.2566e-6 }",
+      "additionalProperties": { "type": "number" }
+    },
+    "svgTemplate": {
+      "type": "string",
+      "description": "Optional. When present, compute() MAY override via its svg return value; otherwise this is used as-is."
+    },
+    "svgWidth": { "type": "number", "minimum": 100, "maximum": 800 },
+    "svgHeight": { "type": "number", "minimum": 40, "maximum": 500 },
+    "description": {
+      "type": "string",
+      "description": "Static explanation rendered below the readouts"
+    },
+    "tip": {
+      "type": "string",
+      "description": "Optional 'try this' nudge shown in small print. Encourages intuition-building."
+    }
+  }
+}

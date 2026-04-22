@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.DS_Store
+*.log
+bun.lockb
+coverage/
+.env
+.env.local
+
+# User content — their PDFs and generated sites stay local
+inputs/*.pdf
+inputs/*.PDF
+output/
+!output/.gitkeep

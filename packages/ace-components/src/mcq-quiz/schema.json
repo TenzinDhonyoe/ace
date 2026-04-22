@@ -1,0 +1,35 @@
+{
+  "$id": "https://ace.study/schemas/widgets/mcq-quiz/v0.1",
+  "type": "object",
+  "title": "MCQQuiz props",
+  "description": "Multiple-choice self-test with instant feedback, per-question explanations, persistent answers, score meter, and filter bar. Ideal for end-of-section assessment.",
+  "required": ["questions"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string" },
+    "title": { "type": "string" },
+    "questions": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 50,
+      "items": {
+        "type": "object",
+        "required": ["q", "options", "answer"],
+        "additionalProperties": false,
+        "properties": {
+          "q": { "type": "string", "description": "The question text" },
+          "options": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 6,
+            "items": { "type": "string" },
+            "description": "Answer choices. Every distractor MUST be a plausible misconception from the lecture content, not a random wrong answer."
+          },
+          "answer": { "type": "integer", "minimum": 0, "description": "0-indexed correct option" },
+          "explanation": { "type": "string", "description": "Shown after answering. Explains why the correct answer is right AND why common distractors are wrong." },
+          "topic": { "type": "string", "description": "Optional section/topic tag for filtering" }
+        }
+      }
+    }
+  }
+}

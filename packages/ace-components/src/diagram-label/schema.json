@@ -1,0 +1,38 @@
+{
+  "$id": "https://ace.study/schemas/widgets/diagram-label/v0.1",
+  "type": "object",
+  "title": "DiagramLabel props",
+  "description": "Label-the-diagram retrieval widget. Shows an image/SVG with numbered hotspots. Student picks a label from a shuffled pool, then clicks the hotspot it belongs on. Green=correct, red=wrong. For anatomy, circuits, biosensor components, microfluidic chips, etc.",
+  "required": ["image", "hotspots"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string" },
+    "title": { "type": "string" },
+    "image": {
+      "type": "object",
+      "required": ["src"],
+      "additionalProperties": false,
+      "properties": {
+        "src": { "type": "string", "description": "Data URL, absolute URL, or inline SVG string starting with '<svg'" },
+        "alt": { "type": "string" },
+        "width": { "type": "number" },
+        "height": { "type": "number" }
+      }
+    },
+    "hotspots": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 12,
+      "items": {
+        "type": "object",
+        "required": ["label", "x", "y"],
+        "additionalProperties": false,
+        "properties": {
+          "label": { "type": "string", "description": "The correct answer for this hotspot" },
+          "x": { "type": "number", "minimum": 0, "maximum": 100, "description": "Percent from left of the image" },
+          "y": { "type": "number", "minimum": 0, "maximum": 100, "description": "Percent from top of the image" }
+        }
+      }
+    }
+  }
+}

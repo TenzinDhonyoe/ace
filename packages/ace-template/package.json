@@ -1,0 +1,22 @@
+{
+  "name": "@ace/template",
+  "version": "0.0.1",
+  "description": "Renders an ace site.config.json into a self-contained HTML file",
+  "license": "MIT",
+  "type": "module",
+  "main": "./src/render.js",
+  "bin": {
+    "ace-template": "./bin/cli.js"
+  },
+  "exports": {
+    ".": "./src/render.js",
+    "./cli": "./bin/cli.js"
+  },
+  "files": ["src/", "bin/", "README.md"],
+  "scripts": {
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@ace/components": "workspace:*"
+  }
+}

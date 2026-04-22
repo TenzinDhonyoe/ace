@@ -1,0 +1,27 @@
+{
+  "$id": "https://ace.study/schemas/widgets/flashcard/v0.1",
+  "type": "object",
+  "title": "Flashcard deck props",
+  "description": "Deck of click-to-reveal cards. Blur-to-clear animation (not 3D flip). Per-card 'Got it' / 'Review' mastery persists to localStorage and the deck supports filtering by mastery status.",
+  "required": ["cards"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string" },
+    "title": { "type": "string", "description": "Optional heading shown above the deck" },
+    "cards": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 80,
+      "items": {
+        "type": "object",
+        "required": ["q", "a"],
+        "additionalProperties": false,
+        "properties": {
+          "q": { "type": "string", "description": "Front side — the question or prompt" },
+          "a": { "type": "string", "description": "Back side — the answer, 1-3 sentences ideal" }
+        }
+      }
+    },
+    "showFilter": { "type": "boolean", "description": "Show All/To-review filter bar. Default: true" }
+  }
+}

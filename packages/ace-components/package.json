@@ -1,0 +1,29 @@
+{
+  "name": "@ace/components",
+  "version": "0.0.1",
+  "description": "AI-composable interactive study widgets — vanilla JS, framework-agnostic",
+  "license": "MIT",
+  "type": "module",
+  "main": "./index.js",
+  "exports": {
+    ".": "./index.js",
+    "./styles.css": "./styles.css",
+    "./registry": "./registry.js",
+    "./schemas/site-config": "./schemas/site-config.schema.json",
+    "./widgets/*": "./src/*/index.js",
+    "./widgets/*/schema": "./src/*/schema.json"
+  },
+  "files": [
+    "src/",
+    "schemas/",
+    "index.js",
+    "registry.js",
+    "styles.css",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "bun test",
+    "build": "echo 'ESM source — no build step needed'"
+  },
+  "keywords": ["education", "interactive", "ai", "study", "components", "svg", "physics"]
+}

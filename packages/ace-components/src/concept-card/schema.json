@@ -1,0 +1,14 @@
+{
+  "$id": "https://ace.study/schemas/widgets/concept-card/v0.1",
+  "type": "object",
+  "title": "ConceptCard props",
+  "description": "Single 'quick-check' retrieval card. Click to reveal the answer, then mark 'Got it' / 'Review'. Perfect for spaced recall of one concept inline within a section.",
+  "required": ["question", "answer"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string" },
+    "question": { "type": "string", "description": "The retrieval prompt — should force active recall, not yes/no recognition" },
+    "answer": { "type": "string", "description": "1-3 sentence answer. Precise. No filler." },
+    "topic": { "type": "string" }
+  }
+}

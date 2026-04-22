@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$id": "https://ace.study/schemas/site-config/v0.1",
+  "title": "Ace Site Config",
+  "description": "The structured specification emitted by the generator and rendered by @ace/template. Version 0.1.",
+  "type": "object",
+  "required": ["version", "meta", "sections"],
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "const": "0.1",
+      "description": "Schema version. Bumped on breaking changes."
+    },
+    "siteId": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]{4,64}$",
+      "description": "Unique slug for this generated site. Used as localStorage namespace. Lowercase, hyphenated. Generator should derive from course code + date."
+    },
+    "meta": {
+      "type": "object",
+      "required": ["course", "title"],
+      "additionalProperties": false,
+      "properties": {
+        "course": { "type": "string", "description": "Course code, e.g. BME804" },
+        "title": { "type": "string", "description": "Site title shown in header and <title>" },
+        "examDate": { "type": "string", "description": "ISO date of exam, optional" },
+        "institution": { "type": "string" },
+        "generatedAt": { "type": "string", "format": "date-time" },
+        "generatorVersion": { "type": "string" }
+      }
+    },
+    "sections": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 20,
+      "items": { "$ref": "#/$defs/section" }
+    }
+  },
+  "$defs": {
+    "section": {
+      "type": "object",
+      "required": ["id", "title"],
+      "additionalProperties": false,
+      "description": "A section has EITHER flat widgets or grouped subtopics, not both. Subtopics produce `<h3 id>` anchors and become sidebar sub-links.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]{1,48}$",
+          "description": "URL-safe anchor id"
+        },
+        "title": { "type": "string" },
+        "summary": {
+          "type": "string",
+          "description": "1-2 sentence orientation shown at the top of the section"
+        },
+        "widgets": {
+          "type": "array",
+          "maxItems": 12,
+          "description": "Flat widget list. Use this OR subtopics, not both. Max 12.",
+          "items": { "$ref": "#/$defs/widgetRef" }
+        },
+        "subtopics": {
+          "type": "array",
+          "maxItems": 12,
+          "description": "Grouped widget lists. Each subtopic gets its own h3 anchor + sidebar sub-link.",
+          "items": { "$ref": "#/$defs/subtopic" }
+        }
+      }
+    },
+    "subtopic": {
+      "type": "object",
+      "required": ["id", "title"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]{1,64}$",
+          "description": "URL-safe anchor id. Typically prefixed by section id (e.g. 'act-electrostatic')."
+        },
+        "title": { "type": "string" },
+        "summary": {
+          "type": "string",
+          "description": "1-line subtopic orientation, shown under the h3"
+        },
+        "widgets": {
+          "type": "array",
+          "maxItems": 8,
+          "items": { "$ref": "#/$defs/widgetRef" }
+        }
+      }
+    },
+    "widgetRef": {
+      "type": "object",
+      "required": ["type", "id", "props"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["slider-sandbox", "flashcard", "mcq-quiz", "diagram-label", "concept-card", "prose"],
+          "description": "Widget type — must match a key in the @ace/components registry"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]{1,64}$",
+          "description": "Stable per-widget id used as localStorage key suffix"
+        },
+        "props": {
+          "type": "object",
+          "description": "Widget-specific props. Validated at mount time against the widget's own schema."
+        }
+      }
+    }
+  }
+}

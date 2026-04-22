@@ -1,0 +1,2 @@
+[test]
+preload = ["./packages/ace-components/test-setup.js"]

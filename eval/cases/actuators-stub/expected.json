@@ -1,0 +1,12 @@
+{
+  "minSections": 3,
+  "maxSections": 8,
+  "maxWidgetsPerSection": 8,
+  "widgetDistribution": {
+    "slider-sandbox": { "min": 2 },
+    "flashcard": { "min": 1 },
+    "mcq-quiz": { "min": 1 }
+  },
+  "mustMention": ["pull-in", "piezoelectric"],
+  "_note": "Stub case. Add real lecture PDFs into inputs/ and regenerate to produce generated.config.json."
+}

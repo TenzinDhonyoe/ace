@@ -1,0 +1,15 @@
+{
+  "$id": "https://ace.study/schemas/widgets/prose/v0.1",
+  "type": "object",
+  "title": "Prose props",
+  "description": "Rich content block. Renders generator-authored HTML with style support for notes, equations, spec grids, definitions, and tight lists. Not for user-supplied HTML — the content is trusted generator output.",
+  "required": ["body"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string" },
+    "body": {
+      "type": "string",
+      "description": "HTML body. Supported helper classes: ace-note, ace-note-warn, ace-note-danger, ace-eq, ace-grid2, ace-tight, ace-def. Inline tags allowed: <b>, <i>, <em>, <strong>, <code>, <sub>, <sup>, <br>, <mark>. Block tags allowed: <p>, <ul>, <ol>, <li>, <h4>, <div>, <span>."
+    }
+  }
+}

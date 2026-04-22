@@ -1,0 +1,660 @@
+/* @ace/components — shared styles.
+   Ported from the hand-tuned BME804 reference (bme804-review.vercel.app).
+   Palette + typography are warm/editorial, not SaaS-blue.
+   All rules are scoped under .ace-root so including this CSS doesn't leak
+   into a host page. Site authors can override any var on :root or .ace-root. */
+
+.ace-root {
+  --ace-paper: #faf8f3;
+  --ace-ink: #1a1a1a;
+  --ace-muted: #6b6257;
+  --ace-rule: #e8e2d6;
+  --ace-accent: #b8451f;
+  --ace-accent-soft: #f3e6dd;
+  --ace-mark: #fff3c4;
+  --ace-ok: #229954;
+  --ace-warn: #c0392b;
+  --ace-serif: Charter, "Iowan Old Style", "Source Serif Pro", Georgia, "Times New Roman", serif;
+  --ace-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+  --ace-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.ace-root.ace-dark,
+html.dark .ace-root {
+  --ace-paper: #171410;
+  --ace-ink: #eae2d4;
+  --ace-muted: #a79f94;
+  --ace-rule: #2a241c;
+  --ace-accent: #e88a5c;
+  --ace-accent-soft: #2c1f16;
+  --ace-mark: #4a3a10;
+}
+
+/* Error boundary — surfaces broken widgets instead of white-screening */
+.ace-root .ace-error {
+  border: 1px solid var(--ace-warn);
+  background: color-mix(in oklab, var(--ace-warn) 8%, transparent);
+  color: var(--ace-warn);
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin: 12px 0;
+  font-family: var(--ace-sans);
+  font-size: 13px;
+}
+.ace-root .ace-error strong { display: block; margin-bottom: 4px; }
+
+/* ─────────────────────────────────────────────────────────────
+   Slider Sandbox — .ace-slider-sandbox (≈ reference .lab)
+   ───────────────────────────────────────────────────────────── */
+.ace-root .ace-slider-sandbox {
+  border: 1px solid var(--ace-rule);
+  border-radius: 10px;
+  padding: clamp(12px, 1.6vw, 18px) clamp(14px, 1.8vw, 20px);
+  margin: 18px 0;
+  max-width: 92ch;
+  background: color-mix(in oklab, var(--ace-accent-soft) 30%, var(--ace-paper));
+  font-family: var(--ace-sans);
+}
+.ace-root .ace-slider-sandbox__title {
+  margin: 0 0 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ace-ink);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.ace-root .ace-slider-sandbox__title::before {
+  content: "▸";
+  color: var(--ace-accent);
+  font-size: 11px;
+}
+.ace-root .ace-slider-sandbox__ctrls {
+  display: grid;
+  grid-template-columns: minmax(100px, 140px) 1fr minmax(70px, 96px);
+  gap: 10px 14px;
+  align-items: center;
+  font-size: 13px;
+  margin-bottom: 14px;
+}
+@media (max-width: 600px) {
+  .ace-root .ace-slider-sandbox__ctrls { grid-template-columns: 1fr 72px; gap: 4px 10px; }
+  .ace-root .ace-slider-sandbox__ctrls label { grid-column: 1 / -1; margin-top: 4px; font-weight: 500; }
+}
+.ace-root .ace-slider-sandbox__ctrls label { color: var(--ace-muted); }
+.ace-root .ace-slider-sandbox__ctrls input[type="range"] {
+  width: 100%;
+  accent-color: var(--ace-accent);
+  cursor: pointer;
+  height: 4px;
+}
+.ace-root .ace-slider-sandbox__ctrls select,
+.ace-root .ace-slider-sandbox__ctrls input[type="number"],
+.ace-root .ace-slider-sandbox__ctrls input[type="text"] {
+  font: inherit;
+  padding: 5px 8px;
+  border: 1px solid var(--ace-rule);
+  border-radius: 4px;
+  background: var(--ace-paper);
+  color: var(--ace-ink);
+  width: 100%;
+}
+.ace-root .ace-slider-sandbox__value {
+  font-family: var(--ace-mono);
+  font-size: 13px;
+  text-align: right;
+  color: var(--ace-ink);
+  white-space: nowrap;
+}
+.ace-root .ace-slider-sandbox__view {
+  margin: 8px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60px;
+}
+.ace-root .ace-slider-sandbox__view svg { display: block; max-width: 100%; height: auto; }
+.ace-root .ace-slider-sandbox__out {
+  font-family: var(--ace-mono);
+  font-size: 13.5px;
+  background: var(--ace-paper);
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--ace-rule);
+  line-height: 1.7;
+  color: var(--ace-ink);
+}
+.ace-root .ace-slider-sandbox__out b { color: var(--ace-accent); font-weight: 600; }
+.ace-root .ace-slider-sandbox__out small {
+  color: var(--ace-muted);
+  font-size: 11.5px;
+  font-family: var(--ace-sans);
+  display: block;
+  margin-top: 4px;
+}
+.ace-root .ace-slider-sandbox__out .warn { color: var(--ace-warn); font-weight: 600; }
+.ace-root .ace-slider-sandbox__tip {
+  font-size: 12.5px;
+  color: var(--ace-muted);
+  margin-top: 10px;
+  line-height: 1.5;
+  font-family: var(--ace-sans);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Flashcard deck — .ace-flashcard (≈ reference .fc)
+   ───────────────────────────────────────────────────────────── */
+.ace-root .ace-flashcard-deck {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 10px;
+  margin: 14px 0;
+  max-width: 92ch;
+}
+.ace-root .ace-flashcard {
+  position: relative;
+  border: 1px solid var(--ace-rule);
+  border-radius: 6px;
+  padding: 12px 14px;
+  cursor: pointer;
+  background: var(--ace-paper);
+  font-family: var(--ace-sans);
+  font-size: 14px;
+  line-height: 1.5;
+}
+.ace-root .ace-flashcard__q { font-weight: 600; color: var(--ace-ink); }
+.ace-root .ace-flashcard__a {
+  color: var(--ace-muted);
+  margin-top: 6px;
+  filter: blur(5px);
+  transition: filter 0.18s;
+  user-select: none;
+}
+.ace-root .ace-flashcard.is-open .ace-flashcard__a { filter: none; user-select: text; }
+.ace-root .ace-flashcard__hint {
+  font-size: 11px;
+  color: var(--ace-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 6px;
+  font-weight: 500;
+}
+.ace-root .ace-flashcard.is-open .ace-flashcard__hint { visibility: hidden; }
+.ace-root .ace-flashcard__mastery { display: none; gap: 6px; margin-top: 10px; }
+.ace-root .ace-flashcard.is-open .ace-flashcard__mastery { display: flex; }
+.ace-root .ace-flashcard__mastery button {
+  flex: 1;
+  border: 1px solid var(--ace-rule);
+  background: var(--ace-paper);
+  color: var(--ace-ink);
+  padding: 5px 0;
+  border-radius: 4px;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.ace-root .ace-flashcard__mastery button:hover { border-color: var(--ace-ink); }
+.ace-root .ace-flashcard.is-got { opacity: 0.5; }
+.ace-root .ace-flashcard.is-got::after {
+  content: "✓";
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  color: var(--ace-ok);
+  font-weight: 600;
+  font-size: 13px;
+}
+
+/* Deck filter (All / To review) — ported from reference .deck-ctrl */
+.ace-root .ace-deck-ctrl {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin: 10px 0 2px;
+  font-family: var(--ace-sans);
+  font-size: 12.5px;
+  color: var(--ace-muted);
+  max-width: 92ch;
+}
+.ace-root .ace-deck-ctrl .ace-deck-count {
+  margin-left: auto;
+  font-family: var(--ace-mono);
+  font-size: 12px;
+}
+.ace-root .ace-deck-ctrl button {
+  background: transparent;
+  border: 1px solid var(--ace-rule);
+  color: var(--ace-ink);
+  padding: 4px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+}
+.ace-root .ace-deck-ctrl button:hover { border-color: var(--ace-ink); }
+.ace-root .ace-deck-ctrl button.is-on {
+  background: var(--ace-accent);
+  color: #fff;
+  border-color: var(--ace-accent);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   MCQ Quiz — .ace-mcq (≈ reference .quiz / .q-item)
+   ───────────────────────────────────────────────────────────── */
+.ace-root .ace-mcq { max-width: 92ch; font-family: var(--ace-sans); }
+.ace-root .ace-mcq__item {
+  border-bottom: 1px solid var(--ace-rule);
+  padding: 18px 0;
+}
+.ace-root .ace-mcq__item:last-child { border-bottom: none; }
+.ace-root .ace-mcq__num {
+  color: var(--ace-muted);
+  font-size: 13px;
+  letter-spacing: 0.05em;
+}
+.ace-root .ace-mcq__text {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 4px 0 10px;
+  color: var(--ace-ink);
+}
+.ace-root .ace-mcq__opts { display: grid; gap: 6px; }
+.ace-root .ace-mcq__opts button {
+  text-align: left;
+  background: transparent;
+  border: 1px solid var(--ace-rule);
+  color: var(--ace-ink);
+  padding: 9px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 14.5px;
+}
+.ace-root .ace-mcq__opts button:hover:not(:disabled) { border-color: var(--ace-ink); }
+.ace-root .ace-mcq__opts button.is-correct {
+  background: color-mix(in oklab, #2e8b57 18%, transparent);
+  border-color: #2e8b57;
+}
+.ace-root .ace-mcq__opts button.is-wrong {
+  background: color-mix(in oklab, #c0392b 16%, transparent);
+  border-color: #c0392b;
+}
+.ace-root .ace-mcq__opts button:disabled { cursor: default; }
+.ace-root .ace-mcq__exp {
+  margin-top: 10px;
+  color: var(--ace-muted);
+  font-size: 14px;
+  padding-left: 12px;
+  border-left: 2px solid var(--ace-rule);
+  display: none;
+}
+.ace-root .ace-mcq__item.is-answered .ace-mcq__exp { display: block; }
+.ace-root .ace-mcq__score {
+  font-family: var(--ace-sans);
+  font-size: 13px;
+  color: var(--ace-muted);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 0 10px;
+  border-bottom: 1px solid var(--ace-rule);
+  margin-bottom: 8px;
+}
+.ace-root .ace-mcq__score .ace-mcq__meter {
+  flex: 1;
+  height: 4px;
+  background: var(--ace-rule);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.ace-root .ace-mcq__score .ace-mcq__meter span {
+  display: block;
+  height: 100%;
+  background: var(--ace-accent);
+  width: 0;
+  transition: width 0.25s;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Concept Card (recall) — .ace-concept (≈ reference .recall)
+   ───────────────────────────────────────────────────────────── */
+.ace-root .ace-concept {
+  border: 1px dashed var(--ace-rule);
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin: 16px 0;
+  max-width: 92ch;
+  font-family: var(--ace-sans);
+  font-size: 14px;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.ace-root .ace-concept:hover { border-color: var(--ace-accent); }
+.ace-root .ace-concept.is-open {
+  border-style: solid;
+  border-color: var(--ace-accent);
+  background: color-mix(in oklab, var(--ace-accent-soft) 60%, transparent);
+  cursor: default;
+}
+.ace-root .ace-concept__q { color: var(--ace-ink); font-weight: 500; line-height: 1.5; }
+.ace-root .ace-concept__q::before {
+  content: "⚡ Quick check · ";
+  color: var(--ace-accent);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.ace-root .ace-concept__ans {
+  color: var(--ace-muted);
+  margin-top: 10px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  display: none;
+}
+.ace-root .ace-concept.is-open .ace-concept__ans { display: block; }
+.ace-root .ace-concept__hint {
+  font-size: 11px;
+  color: var(--ace-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 8px;
+  font-weight: 500;
+}
+.ace-root .ace-concept.is-open .ace-concept__hint { display: none; }
+.ace-root .ace-concept__mastery { display: none; gap: 6px; margin-top: 10px; }
+.ace-root .ace-concept.is-open .ace-concept__mastery { display: flex; }
+.ace-root .ace-concept__mastery button {
+  flex: 1;
+  border: 1px solid var(--ace-rule);
+  background: var(--ace-paper);
+  color: var(--ace-ink);
+  padding: 5px 0;
+  border-radius: 4px;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.ace-root .ace-concept__mastery button:hover { border-color: var(--ace-ink); }
+.ace-root .ace-concept.is-got {
+  opacity: 0.55;
+  border-color: var(--ace-ok);
+  border-style: solid;
+}
+.ace-root .ace-concept.is-got .ace-concept__q::before { content: "✓ Recalled · "; }
+
+/* ─────────────────────────────────────────────────────────────
+   Diagram Label — .ace-diagram-label
+   ───────────────────────────────────────────────────────────── */
+.ace-root .ace-diagram-label {
+  border: 1px solid var(--ace-rule);
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin: 18px 0;
+  max-width: 92ch;
+  background: var(--ace-paper);
+  font-family: var(--ace-sans);
+}
+.ace-root .ace-diagram-label__title {
+  margin: 0 0 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ace-ink);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ace-root .ace-diagram-label__title::before {
+  content: "▸";
+  color: var(--ace-accent);
+  font-size: 11px;
+}
+.ace-root .ace-diagram-label__fig {
+  position: relative;
+  text-align: center;
+}
+.ace-root .ace-diagram-label__fig svg,
+.ace-root .ace-diagram-label__fig img { max-width: 100%; height: auto; }
+.ace-root .ace-diagram-label__hotspot {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--ace-accent);
+  background: var(--ace-paper);
+  color: var(--ace-accent);
+  font: 600 12px/1 var(--ace-mono);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+  transition: background 0.15s;
+}
+.ace-root .ace-diagram-label__hotspot:hover { background: var(--ace-accent-soft); }
+.ace-root .ace-diagram-label__hotspot.is-correct {
+  background: var(--ace-ok);
+  color: #fff;
+  border-color: var(--ace-ok);
+}
+.ace-root .ace-diagram-label__hotspot.is-wrong {
+  background: var(--ace-warn);
+  color: #fff;
+  border-color: var(--ace-warn);
+}
+.ace-root .ace-diagram-label__pool {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+.ace-root .ace-diagram-label__pool button {
+  border: 1px solid var(--ace-rule);
+  background: var(--ace-paper);
+  color: var(--ace-ink);
+  padding: 6px 12px;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.ace-root .ace-diagram-label__pool button:hover:not(:disabled) { border-color: var(--ace-ink); }
+.ace-root .ace-diagram-label__pool button:disabled { opacity: 0.4; cursor: default; }
+.ace-root .ace-diagram-label__pool button.is-active {
+  background: var(--ace-accent);
+  color: #fff;
+  border-color: var(--ace-accent);
+}
+.ace-root .ace-diagram-label__status {
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--ace-muted);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Prose content blocks — .ace-prose (≈ reference .block / .note / .eq / .grid2)
+   ───────────────────────────────────────────────────────────── */
+.ace-root .ace-prose {
+  max-width: 92ch;
+  margin: 14px 0;
+  font-family: var(--ace-serif);
+  font-size: 16px;
+  line-height: 1.65;
+}
+.ace-root .ace-prose p {
+  margin: 8px 0;
+  max-width: 92ch;
+}
+.ace-root .ace-prose ul,
+.ace-root .ace-prose ol {
+  padding-left: 22px;
+  margin: 8px 0;
+}
+.ace-root .ace-prose li { margin: 4px 0; }
+.ace-root .ace-prose li b { font-weight: 600; }
+.ace-root .ace-prose .ace-tight li { margin: 2px 0; }
+.ace-root .ace-prose .ace-def {
+  color: var(--ace-muted);
+  font-style: italic;
+  margin: 0 0 6px;
+  font-size: 16px;
+}
+.ace-root .ace-prose h4 {
+  font-family: var(--ace-sans);
+  font-weight: 600;
+  font-size: 15px;
+  margin: 18px 0 6px;
+  color: var(--ace-ink);
+}
+.ace-root .ace-prose code {
+  font-family: var(--ace-mono);
+  font-size: 0.92em;
+  background: var(--ace-accent-soft);
+  padding: 1px 6px;
+  border-radius: 3px;
+}
+.ace-root .ace-prose mark {
+  background: var(--ace-mark);
+  color: var(--ace-ink);
+  padding: 0 2px;
+}
+
+/* .ace-note — callout box with accent border */
+.ace-root .ace-prose .ace-note,
+.ace-root .ace-note {
+  border-left: 3px solid var(--ace-accent);
+  padding: 4px 12px;
+  margin: 10px 0;
+  color: var(--ace-ink);
+  font-size: 15.5px;
+  font-family: var(--ace-serif);
+}
+.ace-root .ace-prose .ace-note b,
+.ace-root .ace-note b { font-weight: 600; }
+.ace-root .ace-prose .ace-note-warn,
+.ace-root .ace-note-warn { border-color: #c98a2b; }
+.ace-root .ace-prose .ace-note-danger,
+.ace-root .ace-note-danger { border-color: #c0392b; }
+
+/* .ace-eq — equation display block */
+.ace-root .ace-prose .ace-eq,
+.ace-root .ace-eq {
+  font-family: var(--ace-serif);
+  padding: 10px 14px;
+  margin: 10px 0;
+  background: var(--ace-accent-soft);
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 15.5px;
+}
+
+/* .ace-grid2 — 2-column responsive spec grid */
+.ace-root .ace-prose .ace-grid2,
+.ace-root .ace-grid2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(14px, 1.4vw, 22px);
+  max-width: 92ch;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Animations — subtle, sub-300ms, no motion spam
+   All transitions respect prefers-reduced-motion.
+   ───────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: no-preference) {
+  /* Concept card answer slide-down on open */
+  .ace-root .ace-concept__ans {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.3s ease-out, opacity 0.2s ease-out 0.05s;
+  }
+  .ace-root .ace-concept.is-open .ace-concept__ans {
+    max-height: 500px;
+    opacity: 1;
+  }
+  .ace-root .ace-concept__mastery {
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity 0.18s ease 0.1s, transform 0.18s ease 0.1s;
+  }
+  .ace-root .ace-concept.is-open .ace-concept__mastery {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* MCQ correct / wrong micro-animations */
+  .ace-root .ace-mcq__opts button.is-correct { animation: ace-mcq-correct 0.5s ease-out; }
+  .ace-root .ace-mcq__opts button.is-wrong   { animation: ace-mcq-wrong 0.35s ease-out; }
+  @keyframes ace-mcq-correct {
+    0%   { transform: scale(1); box-shadow: 0 0 0 0 rgba(46, 139, 87, 0); }
+    40%  { transform: scale(1.025); box-shadow: 0 0 0 6px rgba(46, 139, 87, 0.18); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(46, 139, 87, 0); }
+  }
+  @keyframes ace-mcq-wrong {
+    0%   { transform: translateX(0); }
+    20%  { transform: translateX(-3px); }
+    40%  { transform: translateX(3px); }
+    60%  { transform: translateX(-2px); }
+    80%  { transform: translateX(2px); }
+    100% { transform: translateX(0); }
+  }
+  .ace-root .ace-mcq__exp {
+    animation: ace-fade-in 0.25s ease-out;
+  }
+  @keyframes ace-fade-in {
+    from { opacity: 0; transform: translateY(-2px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Sidebar active-group accent color transition.
+     (Sub-link open/close animation lives in render.js inline CSS so it applies
+     to all browsers regardless of reduced-motion — the transitions themselves
+     are always gentle sub-300ms.) */
+  .ace-root .ace-side .ace-grp h4 a { transition: color 0.2s ease, background 0.15s ease; }
+
+  /* Palette / help modal fade + scale-in */
+  .ace-root .ace-palette__box,
+  .ace-root .ace-help__box {
+    transform: translateY(-6px) scale(0.985);
+    opacity: 0;
+    transition: transform 0.18s ease-out, opacity 0.18s ease-out;
+  }
+  .ace-root .ace-palette.open .ace-palette__box,
+  .ace-root .ace-help.open .ace-help__box {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+
+  /* Flashcard hover — subtle lift */
+  .ace-root .ace-flashcard { transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease; }
+  .ace-root .ace-flashcard:not(.is-open):not(.is-got):hover {
+    transform: translateY(-1px);
+    border-color: var(--ace-accent);
+    box-shadow: 0 2px 8px color-mix(in oklab, var(--ace-accent) 12%, transparent);
+  }
+
+  /* Progress pill — pulse on mastery increment (runtime toggles .is-pulse) */
+  .ace-root .ace-pill.is-pulse b { animation: ace-pill-pulse 0.5s ease-out; }
+  @keyframes ace-pill-pulse {
+    0%   { transform: scale(1); color: var(--ace-accent); }
+    40%  { transform: scale(1.35); color: var(--ace-ok); }
+    100% { transform: scale(1); color: var(--ace-accent); }
+  }
+
+  /* Section anchor-jump highlight (hash-change shimmer) */
+  .ace-root main section:target > h2,
+  .ace-root main h3:target {
+    animation: ace-anchor-flash 1.2s ease-out;
+  }
+  @keyframes ace-anchor-flash {
+    0%   { background: var(--ace-mark); }
+    100% { background: transparent; }
+  }
+}
+
+/* Even with reduced-motion, keep the essential blur-to-clear on flashcards */
+.ace-root .ace-flashcard__a { transition: filter 0.15s ease; }
