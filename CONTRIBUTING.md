@@ -16,8 +16,7 @@ that serve the 5 canonical widget types, better eval coverage, DX polish.
 **Not in scope:** bespoke course content, closed-source hosting features, a
 Claude-API-backed service (Phase 2+ and separate repo).
 
-See [docs/architecture.md](docs/architecture.md) for the deep rationale and
-[docs/ceo-plan.md](docs/ceo-plan.md) for the product strategy.
+See [docs/architecture.md](docs/architecture.md) for the deep rationale.
 
 ## Dev setup
 

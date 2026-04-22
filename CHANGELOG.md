@@ -10,7 +10,7 @@
 ### Changed
 - **Package rename.** `@ace/components` → `ace-study-components`, `@ace/template` → `ace-study-template` (unscoped, matches the `ace.study` brand). The `@ace` scope requires npm org creation; unscoped names publish immediately with no setup.
 
-## v0.1.0 — 2026-04-21
+## v0.1.0 — 2026-04-20
 
 Initial release.
 

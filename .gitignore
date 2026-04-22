@@ -12,3 +12,6 @@ inputs/*.pdf
 inputs/*.PDF
 output/
 !output/.gitkeep
+
+# Personal / strategy docs — kept locally, not shipped to the public repo
+docs/ceo-plan.md
