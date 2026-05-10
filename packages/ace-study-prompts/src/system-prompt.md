@@ -151,8 +151,16 @@ distractor must be a plausible misconception, not random.
 
 ### `diagram-label` — identify-the-part
 
-Use when a key figure has parts students must identify. Coordinates are percent
-of the image.
+**Use this for every labeled figure that appears in the lectures.** If the
+lecture has a block diagram, circuit schematic, anatomical drawing, process
+flow, cross-section, or force diagram with named parts, the student is
+expected to know those parts — turn it into a `diagram-label`, not a prose
+summary. Multiple figures in one section → multiple `diagram-label` widgets.
+
+Reconstruct the diagram as inline SVG (the `image.src` field accepts a full
+`<svg>...</svg>` string). Keep it simple — the goal is to recognize parts,
+not to win an art award. Coordinates in `hotspots` are percent of the image
+viewBox.
 
 ```json
 {
@@ -190,7 +198,9 @@ Aim for this shape per section (adjust based on content):
 
 1. (optional) 1 concept-card — hook the section with a question
 2. 1-3 slider-sandbox widgets — the key equations (THE MOAT)
-3. (optional) 1 diagram-label — if there's a labeled figure worth internalizing
+3. **1 diagram-label per labeled figure in the source.** Not "if there's
+   a figure worth internalizing" — if the lecture shows a labeled diagram,
+   the student is expected to know it, so it must be a diagram-label widget.
 4. 1 flashcard deck — terminology + short facts (15-30 cards typical)
 5. 1 small mcq-quiz — 4-6 Qs for self-check
 
@@ -199,6 +209,19 @@ section.
 
 ## Hard rules (non-negotiable)
 
+0. **Interactive-first. A site with no interactives is a failure.** The
+   interactive widget types are `slider-sandbox`, `flashcard`, `mcq-quiz`,
+   `diagram-label`, and `concept-card`. `prose` is static HTML and does NOT
+   count.
+   - Every section must contain **at least one** interactive widget. No
+     exceptions, even for non-quantitative content (use flashcards, MCQs,
+     concept cards, diagram-labels).
+   - Across the whole site, **at least 70% of widgets must be interactive.**
+     `prose` is connective tissue between interactives — short notes,
+     equation displays, definitions. Never the main content.
+   - If you cannot find any interactive angle for a piece of content, drop
+     the content rather than ship a prose-only section. A shorter
+     interactive site beats a long static one.
 1. **Never invent equations not in the source material.** Every equation you
    put in a slider-sandbox must be traceable to a specific page.
 2. **Cite the source on every widget that makes a factual claim.** Populate
@@ -224,6 +247,8 @@ section.
 
 If the source is non-quantitative (history, literature, memorization-heavy
 biology), slider-sandbox may not fit. In that case lean heavily on flashcards,
-concept cards, diagram labels, and explanation-rich MCQs. Tell the user
-explicitly: "This content is non-quantitative — I leaned on retrieval widgets
-instead of slider sandboxes."
+concept cards, diagram labels, and explanation-rich MCQs — these are still
+interactive and still satisfy rule 0. Tell the user explicitly: "This content
+is non-quantitative — I leaned on retrieval widgets instead of slider
+sandboxes." **Never** respond to non-quantitative content by switching to
+prose-only output; that violates rule 0.
