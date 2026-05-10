@@ -5,7 +5,21 @@ description: Generate an interactive exam review site from lecture PDFs in the i
 
 # Ace Review — end-to-end exam review site generator
 
-You are generating an interactive exam review site from the lecture PDFs in `./inputs/`. The output must feel like it was hand-tuned by a senior TA, not mass-generated. This skill orchestrates the whole pipeline in one run:
+You are generating an **interactive** exam review site from the lecture PDFs in `./inputs/`. The output must feel like it was hand-tuned by a senior TA, not mass-generated. This skill orchestrates the whole pipeline in one run:
+
+## Prime directive: interactive-first
+
+A generated site with no interactive widgets is a **failed run**, regardless of how good the prose looks. The five interactive widget types are `slider-sandbox`, `flashcard`, `mcq-quiz`, `diagram-label`, and `concept-card`. The sixth type, `prose`, is static HTML and does **not** count as interactive.
+
+Before you write a single line of `site.config.json`, internalize:
+
+- **Every section must include at least one interactive widget.** No exceptions.
+- **At least 70% of total widgets must be interactive.** `prose` is connective tissue, not main content.
+- For non-quantitative content (history, lit, memorization-heavy bio), `slider-sandbox` may not fit — but flashcards, MCQs, concept cards, and diagram-labels still apply. Lean on those; **never** fall back to prose-only output.
+- If you cannot find an interactive angle for a chunk of content, **drop the content**. A shorter interactive site beats a longer static one.
+
+Step 3.5 and Step 5 enforce this with explicit checks. If they fail, fix the config and re-render before reporting to the user.
+
 
 1. Discover inputs
 2. Read every PDF
@@ -62,9 +76,20 @@ Count what you actually saw. Ballpark figures are fine; this is a status signal,
 Build a mental outline:
 - What are the 3–8 major topic areas?
 - What equations appear, with their page numbers (you will cite these)?
-- What figures appear that could become diagram-labels?
+- **Catalog every labeled figure in the lectures.** Block diagrams, circuit
+  schematics, anatomical drawings, process flows, cross-sections, force
+  diagrams — anything with named parts. Each one is a candidate
+  `diagram-label` widget. Note the page and the parts you can see so you can
+  reconstruct the diagram in SVG later.
 - What vocabulary needs flashcards?
 - What misconceptions are likely to trip up students (for MCQ distractors)?
+
+**Diagrams from lectures are first-class content.** If a lecture spends a
+slide or more on a labeled figure, the student is expected to know its parts —
+that means it must show up as a `diagram-label` in the relevant section, not
+get summarized into prose. Aim for at least one diagram-label per section that
+contains a figure in the source material. If a section has multiple distinct
+figures, make multiple diagram-labels.
 
 ## Step 3 — Compose `site.config.json`
 
@@ -88,12 +113,18 @@ consult it for exact field shapes.
 
 Before calling the renderer, re-open `packages/ace-components/schemas/site-config.schema.json` and check `output/site.config.json` against it. You do not need a validator tool — do the check by reading:
 
-- Every widget's `type` is one of the enum values (`slider-sandbox`, `flashcard`, `mcq-quiz`, `diagram-label`, `concept-card`).
+- Every widget's `type` is one of the enum values (`slider-sandbox`, `flashcard`, `mcq-quiz`, `diagram-label`, `concept-card`, `prose`).
 - Every widget has an `id` and every required field for its type.
-- Every section has `id`, `title`, and a `widgets` array.
+- Every section has `id`, `title`, and a `widgets` array (or `subtopics` array).
 - `site.id`, `site.title`, and `site.sections` are all present.
 
-If anything fails, fix the config in place and re-check before moving on. This catches ~90% of the errors that would otherwise surface as a renderer stack trace.
+**Then run the interactive-coverage check (this is the rule that protects the prime directive):**
+
+- Count widgets per section. **Every section must have ≥ 1 interactive widget** (anything other than `prose`). If a section is prose-only, add a flashcard deck, MCQ, or concept card derived from that section's content.
+- Count interactives across the whole site. **interactive_count / total_count must be ≥ 0.70**. If it's below, replace prose with retrieval widgets or delete prose blocks until the ratio passes.
+- If after these fixes you still have a section with zero interactive angles, delete the section rather than ship it static.
+
+If anything fails, fix the config in place and re-check before moving on. This catches ~90% of the errors that would otherwise surface as a renderer stack trace or a non-interactive site.
 
 ## Step 4 — Render to HTML
 
@@ -135,12 +166,14 @@ packages/ace-study-prompts/src/self-check.md
 
 Then confirm `output/index.html` exists (the renderer step succeeded).
 
+**Final interactive gate (before reporting):** Re-count widgets in the final config. If `interactive_count / total_count < 0.70`, or if any single section has zero interactive widgets, **do not declare success.** Loop back to Step 3, swap prose blocks for retrieval widgets (flashcards / MCQs / concept cards), re-render, and re-check.
+
 Report to the user. Use this template and fill in the actual counts and percentages:
 
-> "Generated `<course>` review site: N sections, W widgets total.
+> "Generated `<course>` review site: N sections, W widgets total. **I% interactive** (target ≥ 70%).
 >
-> **Widget mix:** S% sliders · F% flashcards · M% MCQs · D% diagrams · C% concept cards.
-> (Target for quantitative courses: sliders ≥ 30%. For humanities, expect flashcards/concept cards to dominate — that's fine.)
+> **Widget mix:** S% sliders · F% flashcards · M% MCQs · D% diagrams · C% concept cards · P% prose.
+> (Target for quantitative courses: sliders ≥ 30%. For humanities, expect flashcards/concept cards to dominate — that's fine. `prose` should be a small slice of connective tissue, never the bulk.)
 >
 > **Inferred structure:** [only include this line if `inputs/exam-structure.md` was missing or too vague] course code `<course>`, format `<format>`, `<N>` sections — inferred from PDF contents. If wrong, edit the `sections` array in `output/site.config.json` and re-render.
 >
