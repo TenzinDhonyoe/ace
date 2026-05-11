@@ -83,10 +83,12 @@ The skill auto-loads from `.claude/skills/ace-review/SKILL.md`. It reads every P
 ### Step 4: Open your site
 
 ```bash
-open output/index.html
+bun run serve
 ```
 
-Or deploy it. Three one-command options:
+Then open [http://localhost:8765](http://localhost:8765). The widgets load as ES modules, which browsers refuse over `file://` — so opening `output/index.html` directly fails silently with no interactives. Always serve over HTTP locally.
+
+Or deploy it (deployed sites already speak HTTP). Three one-command options:
 
 ```bash
 # Vercel
@@ -130,9 +132,10 @@ Claude: Reading inputs/lecture-01-amplifiers.pdf — 22 pages, 4 equations, 6 fi
 
         Rendering → output/index.html (312 KB, self-contained).
 
-        Done. Open output/index.html or drag the folder onto Vercel.
+        Done. Run `bun run serve` and open http://localhost:8765 — or drag the folder onto Vercel.
 
-You:    [opens the site, plays with the RC filter slider]
+You:    bun run serve
+You:    [opens http://localhost:8765, plays with the RC filter slider]
 You:    [the cutoff frequency updates live as you drag R and C]
 You:    [realizes the Nyquist sandbox has a typo, hand-edits site.config.json]
 You:    bun packages/ace-template/bin/cli.js output/site.config.json -o output/
@@ -224,6 +227,8 @@ bun run eval         # generator quality harness
 Requires [Bun](https://bun.sh) 1.3+.
 
 ## Troubleshooting
+
+**Site loads but has no interactives (just titles and source captions)?** You opened `output/index.html` directly via `file://`. Browsers refuse ES module imports over `file://` for CORS reasons, so the widget bundle never loads. Fix: `bun run serve` and open [http://localhost:8765](http://localhost:8765). Deployed sites are unaffected.
 
 **`/ace-review` isn't available in Claude Code?** Make sure you opened Claude Code from the repo root (`cd my-exam-review && claude`). The skill auto-loads from `.claude/skills/ace-review/SKILL.md` in the current directory.
 

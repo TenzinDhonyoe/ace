@@ -177,7 +177,7 @@ Report to the user. Use this template and fill in the actual counts and percenta
 >
 > **Inferred structure:** [only include this line if `inputs/exam-structure.md` was missing or too vague] course code `<course>`, format `<format>`, `<N>` sections — inferred from PDF contents. If wrong, edit the `sections` array in `output/site.config.json` and re-render.
 >
-> **Open it:** `open output/index.html` — or drag `output/` onto https://app.netlify.com/drop.
+> **Open it:** run `bun run serve` and open http://localhost:8765 — or drag `output/` onto https://app.netlify.com/drop. (Don't double-click `output/index.html`: browsers refuse ES module imports over `file://`, so the widgets won't load.)
 >
 > **Edit without regenerating:** hand-edit `output/site.config.json`, then re-render with:
 > ```
